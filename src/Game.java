@@ -88,7 +88,7 @@ public class Game {
 
                     if (deck.size() != 0) {
                         you.takeCardFromTopOfDeck(deck);
-                        System.out.println("No cards to play. Player draws a: " + you.getHand().get(you.getHand().size() - 1));
+                        System.out.println("No cards to play. Player draws a: " + you.getHand().get(you.numberOfCardsInHand() - 1));
                     }
                     else {
                         you.setSkipStatus(true);
@@ -122,7 +122,7 @@ public class Game {
                             you.getHand().remove(cardChoiceObject);
 
                             // Playing a wild card allows the player to select a new suit
-                            if (topCard.getValue().equals("8")) {
+                            if (topCard.getValue().equals("8") && you.numberOfCardsInHand() != 0) {
                                 System.out.println("\n" + you.getSuitsAndChoices());
                                 System.out.print("\nPlayer's decision: ");
 
@@ -189,7 +189,7 @@ public class Game {
                     System.out.println("Computer's decision: " + topCard);
 
                     // The computer played a crazy eight and will now select a new suit
-                    if (topCard.getValue().equals("8")) {
+                    if (topCard.getValue().equals("8") && computer.numberOfCardsInHand() != 0) {
                         newSuit = computer.computerSelectNewSuit();
                         System.out.println("New suit selected: " + Card.pairTypeWithUnicode(newSuit) + "\n");
                     }

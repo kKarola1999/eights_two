@@ -12,7 +12,7 @@ public class Player implements PlayerActions {
     private String type;
 
     /**
-     * Toggled to true once a player cannot any cards in it's hand and there are no cards left in the deck
+     * Toggled to true once a player cannot play any cards in it's hand and there are no cards left in the deck
      */
     private boolean skippedRecentTurn;
 
