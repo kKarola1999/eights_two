@@ -2,9 +2,11 @@
 
 Play Crazy Eights against the computer via the command-line. Good luck.
 
-> javac src/*.java
+> javac src/*.java && cd src/ && java Game
 
-> java Game
+Or ....
+
+[Give it a try in your browser!!! Good luck!](https://crazy-eights-java.mykisscool.repl.run)
 
 ##### Screenshots
 
