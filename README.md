@@ -1,4 +1,4 @@
-### Crazy Eights Cli
+## Crazy Eights
 
 Play Crazy Eights against the computer via the command-line. Good luck.
 
