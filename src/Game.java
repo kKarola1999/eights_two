@@ -14,7 +14,7 @@ public class Game {
 
         // Create two players; one computer and one human
         Player you = new Player("player");
-        Player computer = new Player("computer");
+        Player player1 = new Player("player1");
 
         // Create a deck of 52 unique, shuffled cards
         ArrayList<Card> deck = Card.createDeck();
@@ -37,8 +37,8 @@ public class Game {
         }
 
         // Randomly select who goes first- Player or Computer
-        Player firstCardPlayer = Rules.randomPlayer(you, computer);
-        Player secondCardPlayer = (firstCardPlayer == you) ? computer : you;
+        Player firstCardPlayer = Rules.randomPlayer(you, player1);
+        Player secondCardPlayer = (firstCardPlayer == you) ? player1 : you;
 
         // Deal cards
         for (int c = 0; c < Rules.CARDS_TO_DEAL; c++) {
@@ -46,7 +46,7 @@ public class Game {
             secondCardPlayer.takeCardFromTopOfDeck(deck);
         }
 
-        System.out.println(you + " and " + computer + " were dealt " + Rules.CARDS_TO_DEAL + " cards each.");
+        System.out.println(you + " and " + player1 + " were dealt " + Rules.CARDS_TO_DEAL + " cards each.");
 
         // Initialize the up card
         String topCardFaceValue;
@@ -80,7 +80,7 @@ public class Game {
                 boolean needALineBreak = false;
 
                 // Reset every turn; reserved for scenarios where there are no cards to draw and no cards to play
-                you.setSkipStatus(false);
+                //you.setSkipStatus(false);
 
                 // If you cannot play a card, you have to take one from the top
                 while (!you.canPlayCardThisTopCard(newSuit, topCard)) {
@@ -107,12 +107,14 @@ public class Game {
                             ? "Top card ....... " + topCard
                             : "New suit ....... " + Card.pairTypeWithUnicode(newSuit));
                     System.out.println(you.getHandAndChoices());
-                    System.out.print("\nPlayer's decision: ");
+                    System.out.print("\nYour's decision: ");
+                    nextUp=player1;
+                    newSuit="";
                 }
 
                 // Make sure you can lay down the card
                 boolean validPlay = false;
-                while (!validPlay && !you.skipped()) {
+                while (!validPlay ) {
                     try {
                         // Sentinel-controlled iteration
                         Card cardChoiceObject = you.playCard(input.nextInt());
@@ -124,7 +126,7 @@ public class Game {
                             // Playing a wild card allows the player to select a new suit
                             if (topCard.getValue().equals("8") && you.numberOfCardsInHand() != 0) {
                                 System.out.println("\n" + you.getSuitsAndChoices());
-                                System.out.print("\nPlayer's decision: ");
+                                System.out.print("\nYour's decision: ");
 
                                 boolean validSuit = false;
                                 do {
@@ -132,6 +134,7 @@ public class Game {
                                         newSuit = Card.CARD_TYPES[input.nextInt() -1];
                                         validSuit = true;
                                         validPlay = true;
+                                        nextUp=player1;
                                     }
                                     catch (IndexOutOfBoundsException e) {
                                         handleException("Invalid selection. Please try again.");
@@ -165,18 +168,21 @@ public class Game {
             else {
                 boolean needALineBreak = false; // For formatting in the terminal
 
-                computer.setSkipStatus(false);
 
-                while (!computer.canPlayCardThisTopCard(newSuit, topCard)) {
+                // Reset every turn; reserved for scenarios where there are no cards to draw and no cards to play
+                //you.setSkipStatus(false);
+
+                // If you cannot play a card, you have to take one from the top
+                while (!player1.canPlayCardThisTopCard(newSuit, topCard)) {
                     needALineBreak = true;
 
                     if (deck.size() != 0) {
-                        computer.takeCardFromTopOfDeck(deck);
-                        System.out.println("No cards to play. Computer draws a card.");
+                        player1.takeCardFromTopOfDeck(deck);
+                        System.out.println("No cards to play. Player draws a: " + player1.getHand().get(player1.numberOfCardsInHand() - 1));
                     }
                     else {
-                        computer.setSkipStatus(true);
-                        System.out.println("No cards to play. No cards to draw from deck. Skipping " + computer + "'s turn.");
+                        player1.setSkipStatus(true);
+                        System.out.println("No cards to play. No cards to draw from deck. Skipping " + player1 + "'s turn.");
                         break;
                     }
                 }
@@ -184,32 +190,86 @@ public class Game {
                 // For formatting in the terminal
                 if (needALineBreak) System.out.println();
 
-                if (!computer.skipped()) {
-                    topCard = computer.computerAi(newSuit, topCard);
-                    System.out.println("Computer's decision: " + topCard);
+                // Update game status for Player
+                if (!player1.skipped()) {
+                System.out.println("Cards left ..... " + deck.size());
+                System.out.println((newSuit.length() == 0)
+                        ? "Top card ....... " + topCard
+                        : "New suit ....... " + Card.pairTypeWithUnicode(newSuit));
+                System.out.println(player1.getHandAndChoices());
+                System.out.print("\nPlayer's 1 decision: ");
+                    nextUp=you;
+                    newSuit="";
+                }
 
-                    // The computer played a crazy eight and will now select a new suit
-                    if (topCard.getValue().equals("8") && computer.numberOfCardsInHand() != 0) {
-                        newSuit = computer.computerSelectNewSuit();
-                        System.out.println("New suit selected: " + Card.pairTypeWithUnicode(newSuit) + "\n");
+                // Make sure you can lay down the card
+                boolean validPlay = false;
+                while (!validPlay ) {
+                    try {
+                        // Sentinel-controlled iteration
+                        Card cardChoiceObject = player1.playCard(input.nextInt());
+
+                        if (Rules.checkForValidPlay(newSuit, topCard, cardChoiceObject)) {
+                            topCard = cardChoiceObject;
+                            player1.getHand().remove(cardChoiceObject);
+
+                            // Playing a wild card allows the player to select a new suit
+                            if (topCard.getValue().equals("8") && player1.numberOfCardsInHand() != 0) {
+                                System.out.println("\n" + player1.getSuitsAndChoices());
+                                System.out.print("\nPlayer's 1 decision: ");
+
+                                boolean validSuit = false;
+
+                                do {
+                                    try {
+                                        newSuit = Card.CARD_TYPES[input.nextInt() -1];
+                                        validSuit = true;
+                                        validPlay = true;
+                                        nextUp=you;
+                                    }
+                                    catch (IndexOutOfBoundsException e) {
+                                        handleException("Invalid selection. Please try again.");
+                                    }
+                                    catch (InputMismatchException e) {
+                                        input.next();
+                                        handleException("Invalid selection. Please try again.");
+                                    }
+                                }
+                                while (!validSuit);
+                            }
+                            else {
+                                validPlay = true;
+                            }
+                        }
+                        else {
+                            handleException("You cannot play that card. Please try again.");
+                        }
                     }
-                    else {
-                        System.out.println();
+                    catch (IndexOutOfBoundsException e) {
+                        handleException("Invalid selection. Please try again.");
                     }
+                    catch (InputMismatchException e) {
+                        input.next();
+                        handleException("Invalid selection. Please try again.");
+                    }
+
+                    System.out.println();
                 }
             }
+                }
+
 
             // See if there is a winner
             if (you.numberOfCardsInHand() == 0) {
                 gameStatus = Status.WON;
                 reasonGameOver = "Player wins- they were able to get rid of their cards first!";
             }
-            else if (computer.numberOfCardsInHand() == 0) {
+            else if (player1.numberOfCardsInHand() == 0) {
                 gameStatus = Status.LOST;
                 reasonGameOver = "Computer wins- they were able to get rid of their cards first!";
             }
-            else if (deck.size() == 0 && you.skipped() && computer.skipped()) {
-                gameStatus = Rules.determineWinner(you, computer);
+            else if (deck.size() == 0 ) {
+                gameStatus = Rules.determineWinner(you, player1);
 
                 if (gameStatus.equals(Status.WON)) {
                     reasonGameOver = "Player wins!- their card total is less than the Computer's card total.";
@@ -235,8 +295,8 @@ public class Game {
         }
 
         // Explain what happened. The game is over.
-        System.out.println(reasonGameOver);
-    }
+        //System.out.println(reasonGameOver);
+
 
     /**
      * Helper method to reduce code duplication
@@ -245,6 +305,6 @@ public class Game {
      */
     private static void handleException(String message) {
         System.out.println("\n" + message);
-        System.out.print("\nPlayer's decision: ");
+        System.out.print("\nPlayer decision: ");
     }
 }

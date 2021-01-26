@@ -42,14 +42,14 @@ public class Rules {
      * Randomly select either the player or computer to go first
      *
      * @param player Player
-     * @param computer Computer
+     * @param player2 Player
      * @return Returns either the Player player object or Computer player object
      */
-    public static Player randomPlayer(Player player, Player computer) {
+    public static Player randomPlayer(Player player, Player player2) {
         ArrayList<Player> players = new ArrayList<>(2);
 
         players.add(player);
-        players.add(computer);
+        players.add(player2);
 
         Collections.shuffle(players);
 
@@ -92,13 +92,13 @@ public class Rules {
      * who won
      *
      * @param player Player (and remaining cards on hand)
-     * @param computer Computer Player (and remaining cards on hand)
+     * @param player2 Computer Player (and remaining cards on hand)
      * @return The game status (how it ended)
      */
-    public static Game.Status determineWinner(Player player, Player computer) {
+    public static Game.Status determineWinner(Player player, Player player2) {
 
         int playerPoints = 0;
-        int computerPoints = 0;
+        int player2Points = 0;
 
         // Cycle through player's hand and calculate points
         for (Card card : player.getHand()) {
@@ -106,15 +106,15 @@ public class Rules {
         }
 
         // Cycle through computer's hand and calculate points
-        for (Card card : computer.getHand()) {
-            computerPoints += CARD_VALUES.get(card.getValue());
+        for (Card card : player2.getHand()) {
+            player2Points += CARD_VALUES.get(card.getValue());
         }
 
         Game.Status status;
-        if (playerPoints > computerPoints) {
+        if (playerPoints > player2Points) {
             status = Game.Status.WON;
         }
-        else if (playerPoints < computerPoints) {
+        else if (playerPoints < player2Points) {
             status = Game.Status.LOST;
         }
         else {

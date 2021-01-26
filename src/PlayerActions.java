@@ -6,7 +6,7 @@ public interface PlayerActions {
 
     Card playCard(int cardChoice);
 
-    Card computerAi(String newSuit, Card topCard);
+    //Card computerAi(String newSuit, Card topCard);
 
-    String computerSelectNewSuit();
+    //String computerSelectNewSuit();
 }

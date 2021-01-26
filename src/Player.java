@@ -29,10 +29,9 @@ public class Player implements PlayerActions {
     public Player(String type) {
         type = type.toLowerCase();
 
-        if (!type.equals("player") && !type.equals("computer")) {
+        if (!type.equals("player") && !type.equals("player1")) {
             throw new RuntimeException("Player type \"" + type + "\" not recognized.");
-        }
-        else {
+        } else {
             this.type = type;
         }
     }
@@ -77,7 +76,7 @@ public class Player implements PlayerActions {
             niceHand += this.hand.get(i) + ",  ";
             lengths.add(this.hand.get(i).toString().length());
         }
-        niceHand = niceHand.substring(0, niceHand.length() -3);
+        niceHand = niceHand.substring(0, niceHand.length() - 3);
 
         // Row 2
         niceHand += "\nYour choices ... ";
@@ -87,10 +86,10 @@ public class Player implements PlayerActions {
 
             // One less space in formatting
             if (i >= 10) {
-                niceHand = niceHand.substring(0, niceHand.length() -1);
+                niceHand = niceHand.substring(0, niceHand.length() - 1);
             }
 
-            niceHand += ("(" + (i +1) + ")")
+            niceHand += ("(" + (i + 1) + ")")
                     + String.join("", Collections.nCopies(padding, " "));
         }
 
@@ -110,31 +109,36 @@ public class Player implements PlayerActions {
             niceHand += " " + Card.pairTypeWithUnicode(type) + " , ";
         }
 
-        niceHand = niceHand.substring(0, niceHand.length() -2);
+        niceHand = niceHand.substring(0, niceHand.length() - 2);
 
         // Row 2
         niceHand += "\nYour choices ... ";
 
         for (int i = 0; i < Card.CARD_TYPES.length; i++) {
-            niceHand += ("(" + (i +1) + ")") + "  ";
+            niceHand += ("(" + (i + 1) + ")") + "  ";
         }
 
         return niceHand.trim();
     }
+
 
     /**
      * Returns the number of cards in a player's hand
      *
      * @return The number of cards in that hand
      */
-    public int numberOfCardsInHand() { return this.hand.size(); }
+    public int numberOfCardsInHand() {
+        return this.hand.size();
+    }
 
     /**
      * Exposes the player's hand
      *
      * @return The player's or the computer's hand
      */
-    public ArrayList<Card> getHand() { return this.hand; }
+    public ArrayList<Card> getHand() {
+        return this.hand;
+    }
 
     /**
      * Returns true/false whether or not the Player has a card to play
@@ -159,7 +163,7 @@ public class Player implements PlayerActions {
             }
 
             if ((newSuit.length() == 0) && (card.getValue().equals(topCard.getValue())
-                || card.getType().equals(topCard.getType()))) {
+                    || card.getType().equals(topCard.getType()))) {
 
                 canPlay = true;
                 break;
@@ -169,6 +173,15 @@ public class Player implements PlayerActions {
         return canPlay;
     }
 
+    public boolean skipped() {
+        return this.skippedRecentTurn;
+    }
+
+
+    public void setSkipStatus(boolean status) {
+        this.skippedRecentTurn = status;
+    }
+}
     /**
      * The Computer will play a card in it's hand
      *
@@ -176,6 +189,7 @@ public class Player implements PlayerActions {
      * @param topCard Last card played
      * @return The card the computer is playing for it's turn
      */
+    /*
     public Card computerAi(String newSuit, Card topCard) {
         // @TODO Ensure only the computer can access this method
 
@@ -186,7 +200,7 @@ public class Player implements PlayerActions {
          *  2.) Play a card value
          *  3.) Play an "8" (only if there are no other options)
          */
-
+/*
         ArrayList<String> waysToPlay = new ArrayList<>(2);
         waysToPlay.add("suit");
         waysToPlay.add("rank");
@@ -239,6 +253,7 @@ public class Player implements PlayerActions {
      *
      * @return The new suit to be played after playing a crazy eight
      */
+    /*
     public String computerSelectNewSuit() {
         // @TODO Ensure only the computer can access this method
 
@@ -257,6 +272,7 @@ public class Player implements PlayerActions {
     /**
      * Becomes true once a player cannot play a card in their hand and there are no cards left in the deck
      */
+    /*
     public void setSkipStatus(boolean status) {
         this.skippedRecentTurn = status;
     }
@@ -264,5 +280,7 @@ public class Player implements PlayerActions {
     /**
      * @return Whether or not the player has moves
      */
+    /*
     public boolean skipped() { return this.skippedRecentTurn; }
 }
+*/
